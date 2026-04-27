@@ -4,8 +4,12 @@ services:
     runtime: node
     region: singapore
     plan: free
-    buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install --legacy-peer-deps
+    buildCommand: |
+      cd frontend && npm install --legacy-peer-deps && npm run build
+      cd ../backend && npm install --legacy-peer-deps
     startCommand: cd backend && node hotel-server-v6.mjs
     envVars:
       - key: NODE_VERSION
         value: 20
+      - key: PYTHON_VERSION
+        value: 3.11
