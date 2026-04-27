@@ -97,3 +97,4 @@ sqlite3 backend/tours.db "SELECT * FROM organizations WHERE tax_id='95495431';"
 - 加入身份驗證（JWT）+ 依 `organizations.role` 控制 admin 後台路由
 - PDF 匯出（`@react-pdf/renderer` 或後端 Puppeteer）
 - 串接 Amadeus API 取代 mock flight 資料
+# claude-b2b2c-tour
