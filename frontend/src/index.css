@@ -1,0 +1,731 @@
+:root {
+  --primary: #185FA5;
+  --primary-dark: #042C53;
+  --primary-light: #E6F1FB;
+  --accent: #D85A30;
+  --success-bg: #E1F5EE;
+  --success-text: #085041;
+  --border: #e5e7eb;
+  --text-muted: #6b7280;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: var(--bg);
+  color: #111;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.logo {
+  text-decoration: none;
+  color: var(--primary-dark);
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+.logo-icon { font-size: 24px; }
+
+.nav {
+  display: flex;
+  gap: 8px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 99px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.nav-link:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.nav-link.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.main-content {
+  min-height: calc(100vh - 140px);
+  padding: 40px 0;
+}
+
+/* Tour List Styles */
+.filter-bar {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; margin-bottom: 20px;
+}
+.filter-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px; margin-bottom: 12px;
+}
+.filter-grid label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.filter-grid input, .filter-grid select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border);
+  border-radius: 6px; font-size: 14px; background: #fff;
+}
+.sort-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.sort-group { display: flex; gap: 6px; align-items: center; }
+.sort-group .label { font-size: 12px; color: var(--text-muted); }
+.btn-sort {
+  padding: 6px 12px; font-size: 12px; background: #fff;
+  border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.15s;
+}
+.btn-sort:hover { border-color: var(--primary); }
+.btn-sort.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.tour-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.tour-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.tour-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(24, 95, 165, 0.12);
+  border-color: var(--primary);
+}
+.tour-img {
+  height: 140px; display: flex; align-items: center; justify-content: center;
+  color: var(--primary-dark); font-size: 16px; font-weight: 600; position: relative;
+}
+.tour-badge {
+  position: absolute; top: 10px; left: 10px; background: var(--accent); color: #fff;
+  font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500;
+}
+.fav-btn {
+  position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.95); border: none; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; color: #ccc;
+  transition: transform 0.15s;
+}
+.fav-btn:hover { transform: scale(1.1); }
+.fav-btn.on { color: var(--accent); }
+.tour-body { padding: 14px 16px; }
+.tour-meta {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--text-muted); margin-bottom: 8px;
+}
+.price-original { font-size: 12px; color: var(--text-muted); text-decoration: line-through; }
+.price-row {
+  display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px;
+}
+.price-agency { font-size: 20px; font-weight: 600; color: var(--primary-dark); }
+.price-label { font-size: 11px; color: var(--primary); }
+.rebate-badge {
+  font-size: 11px; padding: 2px 8px; background: var(--success-bg);
+  color: var(--success-text); border-radius: 4px; font-weight: 500;
+}
+.card-actions { display: flex; gap: 6px; margin-top: 12px; }
+.btn-primary {
+  flex: 1; padding: 8px; font-size: 13px; background: var(--primary); color: #fff;
+  border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-ghost {
+  padding: 8px 12px; font-size: 13px; background: #fff;
+  border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
+}
+.btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+.pager { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 24px; }
+.pager button {
+  min-width: 32px; height: 32px; padding: 0 10px; font-size: 13px;
+  background: #fff; border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
+}
+.pager button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.pager button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.empty, .loading {
+  grid-column: 1/-1; text-align: center; padding: 60px 20px;
+  color: var(--text-muted); font-size: 14px;
+}
+
+
+/* Flight Search Styles */
+.search-hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.search-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+}
+.search-hero p {
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
+.flight-search-bar {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: -20px;
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 10;
+}
+.search-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: flex-end;
+}
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-with-icon .icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.input-with-icon input, .input-with-icon select {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  background: #fff;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+.input-with-icon input:focus, .input-with-icon select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn-search {
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+/* Flight Card Styles */
+.flight-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.flight-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.flight-card-body {
+  flex: 1;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 180px 1fr 180px;
+  align-items: center;
+  gap: 20px;
+}
+.airline-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.airline-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.airline-name-group {
+  display: flex;
+  flex-direction: column;
+}
+.airline-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+.flight-number {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.flight-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+.time-point {
+  text-align: center;
+}
+.time-point .time {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.time-point .airport-code {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.duration-path {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.path-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--border);
+}
+.path-line .line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.path-line .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.path-line .plane-icon {
+  color: var(--primary);
+  transform: rotate(90deg);
+}
+.duration-text, .stops-text {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.flight-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.detail-item.carbon.good {
+  color: #10b981;
+}
+/* Hotel Search Styles */
+.hotel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.hotel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.hotel-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  border-color: var(--primary);
+}
+
+.hotel-thumbnail-wrapper {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.hotel-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.hotel-card:hover .hotel-thumbnail {
+  transform: scale(1.1);
+}
+
+.hotel-rating-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.hotel-info {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hotel-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.hotel-name {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1.3;
+}
+
+.hotel-price-group {
+  text-align: right;
+}
+
+.hotel-price {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.hotel-price-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.hotel-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.hotel-amenities-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.amenity-tag {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.amenity-tag-more {
+  font-size: 11px;
+  color: var(--text-muted);
+  align-self: center;
+}
+
+.hotel-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hotel-reviews {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.btn-hotel-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-hotel-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.other-results h3 {
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+}
+
+@media (max-width: 640px) {
+  .hotel-grid { grid-template-columns: 1fr; }
+}
+
+.flight-card-action {
+  width: 200px;
+  padding: 24px;
+  border-left: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fafafa;
+}
+.price-tag {
+  text-align: center;
+  margin-bottom: 12px;
+}
+.price-tag .currency {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+}
+.price-tag .amount {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.btn-select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-select:hover {
+  background: var(--primary-dark);
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 40px 0 20px;
+}
+.results-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+.results-count {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.footer {
+  padding: 40px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.loading-state, .error-state, .empty-state {
+  padding: 80px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-muted);
+}
+.loading-icon { color: var(--primary); }
+.error-icon { color: var(--accent); }
+.animate-spin { animation: spin 1s linear infinite; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .flight-card { flex-direction: column; }
+  .flight-card-body { grid-template-columns: 1fr; }
+  .flight-card-action { width: 100%; border-left: none; border-top: 1px dashed var(--border); }
+  .flight-timeline { gap: 15px; }
+}
+
+@media (max-width: 640px) {
+  .search-form { grid-template-columns: 1fr; }
+  .search-hero h1 { font-size: 28px; }
+  .flight-card-body { padding: 16px; }
+}
+
+/* Popular Destinations Styles */
+.popular-destinations-section {
+  margin-bottom: 40px;
+}
+.section-header {
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.destinations-scroll-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  scrollbar-width: none; /* Firefox */
+}
+.destinations-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.destination-card-mini {
+  flex: 0 0 240px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+.destination-card-mini:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+}
+
+.dest-thumb-wrapper {
+  position: relative;
+  height: 140px;
+}
+.dest-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dest-price-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.dest-mini-info {
+  padding: 12px;
+}
+.dest-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.dest-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.destinations-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+  color: var(--text-muted);
+}
+
+/* Enhanced Tour Card Image Styles */
+.tour-img {
+  position: relative;
+  height: 180px; 
+}
+.tour-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tour-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%);
+}
+.tour-card-title {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  z-index: 5;
+}
+
+
