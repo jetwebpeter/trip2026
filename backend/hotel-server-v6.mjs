@@ -24,6 +24,21 @@ const SERPAPI_KEY = '8c166a1ca434eb4d5db17e55dad3ac385488f2d23579e25c7b7ed29a5e6
 const nodeFetch = globalThis.fetch;
 
 // ================================================================
+
+// DEBUG endpoint
+app.get('/api/debug', (req, res) => {
+  try {
+    const info = {
+      db: db ? 'connected' : 'null',
+      tours: db ? db.prepare('SELECT COUNT(*) as c FROM tour_products').get().c : 'N/A',
+      vouchers: db ? db.prepare('SELECT COUNT(*) as c FROM land_services').get().c : 'N/A',
+      cwd: process.cwd(),
+      node: process.version,
+    };
+    res.json(info);
+  } catch(e) { res.json({ error: e.message }); }
+});
+
 // HOTEL APIs
 // ================================================================
 app.get('/api/hotels/search', async (req, res) => {
