@@ -7,96 +7,10 @@
 
 import express from 'express';
 import cors from 'cors';
-import initSqlJs from 'sql.js';
-<<<<<<< HEAD
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-
-const SQL = await initSqlJs();
-const DB_PATH = 'tours.db';
-let db;
-try {
-  if (existsSync(DB_PATH)) {
-    const fileBuffer = readFileSync(DB_PATH);
-    db = new SQL.Database(fileBuffer);
-  } else {
-    db = new SQL.Database();
-  }
-  const _origExec = db.exec.bind(db);
-  const _save = () => writeFileSync(DB_PATH, db.export());
-  // Add prepare wrapper for better-sqlite3 compatibility
-  db.pragma = () => {};
-  const _prepare = db.prepare.bind(db);
-  db.prepare = (sql) => {
-    const stmt = _prepare(sql);
-    return {
-      run: (...args) => { const r = stmt.run(args); _save(); return r; },
-      get: (...args) => {
-        const rows = stmt.get(args);
-        if (!rows) return undefined;
-        const cols = rows.columns;
-        const vals = rows.values[0];
-        if (!vals) return undefined;
-        return Object.fromEntries(cols.map((c,i) => [c, vals[i]]));
-      },
-      all: (...args) => {
-        const rows = stmt.get(args);
-        if (!rows || !rows.values) return [];
-        return rows.values.map(v => Object.fromEntries(rows.columns.map((c,i) => [c, v[i]])));
-      },
-    };
-  };
-  db.exec = (sql) => { _origExec(sql); _save(); };
-  console.log('[DB] sql.js initialized');
-} catch(e) {
-  console.error('[DB] Error:', e.message);
-  db = null;
-}
-=======
->>>>>>> jetwebpeter/b2b2c-tour
-import crypto from 'crypto';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const app = express();
-app.use(cors());
-app.use(express.json());
+import Database from 'better-sqlite3';
 
 let db;
-try {
-  const SQL = await initSqlJs();
-  const { readFileSync, writeFileSync, existsSync } = await import('fs');
-  const DB_PATH = 'tours.db';
-  if (existsSync(DB_PATH)) {
-    db = new SQL.Database(readFileSync(DB_PATH));
-  } else {
-    db = new SQL.Database();
-  }
-  const save = () => writeFileSync(DB_PATH, db.export());
-  db.pragma = () => {};
-  const _prepare = db.prepare.bind(db);
-  db.prepare = (sql) => {
-    const stmt = _prepare(sql);
-    return {
-      run: (...args) => { stmt.run(args.flat()); save(); return {}; },
-      get: (...args) => {
-        const r = stmt.getAsObject(args.flat());
-        return Object.keys(r).length ? r : undefined;
-      },
-      all: (...args) => {
-        const rows = []; stmt.bind(args.flat());
-        while (stmt.step()) rows.push(stmt.getAsObject());
-        stmt.reset(); return rows;
-      },
-    };
-  };
-  const _exec = db.exec.bind(db);
-  db.exec = (sql) => { _exec(sql); save(); };
-  console.log('[DB] sql.js connected');
-} catch(e) {
-  console.error('[DB] Error:', e.message);
-  db = null;
-}
+try { db = new Database('tours.db'); console.log('[DB] connected'); } catch(e) { console.error('[DB]', e.message); db = null; }
 
 const SERPAPI_KEY = '8c166a1ca434eb4d5db17e55dad3ac385488f2d23579e25c7b7ed29a5e6ce77e';
 const nodeFetch = globalThis.fetch;
