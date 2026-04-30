@@ -7,7 +7,49 @@
 
 import express from 'express';
 import cors from 'cors';
-import Database from 'better-sqlite3';
+import initSqlJs from 'sql.js';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+
+const SQL = await initSqlJs();
+const DB_PATH = 'tours.db';
+let db;
+try {
+  if (existsSync(DB_PATH)) {
+    const fileBuffer = readFileSync(DB_PATH);
+    db = new SQL.Database(fileBuffer);
+  } else {
+    db = new SQL.Database();
+  }
+  const _origExec = db.exec.bind(db);
+  const _save = () => writeFileSync(DB_PATH, db.export());
+  // Add prepare wrapper for better-sqlite3 compatibility
+  db.pragma = () => {};
+  const _prepare = db.prepare.bind(db);
+  db.prepare = (sql) => {
+    const stmt = _prepare(sql);
+    return {
+      run: (...args) => { const r = stmt.run(args); _save(); return r; },
+      get: (...args) => {
+        const rows = stmt.get(args);
+        if (!rows) return undefined;
+        const cols = rows.columns;
+        const vals = rows.values[0];
+        if (!vals) return undefined;
+        return Object.fromEntries(cols.map((c,i) => [c, vals[i]]));
+      },
+      all: (...args) => {
+        const rows = stmt.get(args);
+        if (!rows || !rows.values) return [];
+        return rows.values.map(v => Object.fromEntries(rows.columns.map((c,i) => [c, v[i]])));
+      },
+    };
+  };
+  db.exec = (sql) => { _origExec(sql); _save(); };
+  console.log('[DB] sql.js initialized');
+} catch(e) {
+  console.error('[DB] Error:', e.message);
+  db = null;
+}
 import crypto from 'crypto';
 import path from 'path';
 import { fileURLToPath } from 'url';

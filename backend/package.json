@@ -11,6 +11,7 @@
     "better-sqlite3": "^11.3.0",
     "cors": "^2.8.5",
     "express": "^4.21.0",
-    "serpapi": "^2.2.1"
+    "serpapi": "^2.2.1",
+    "sql.js": "^1.12.0"
   }
 }
