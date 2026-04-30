@@ -141,6 +141,43 @@ app.post('/api/chat', (req, res) => {
 });
 
 // ================================================================
+
+// ================================================================
+// TOUR PRODUCTS - Table + Seed
+// ================================================================
+if (db) {
+  db.exec(`CREATE TABLE IF NOT EXISTS tour_products (
+    tour_product_no TEXT PRIMARY KEY, tour_product_name TEXT NOT NULL,
+    arrival_city TEXT, region TEXT, departure_pax INTEGER, duration_days INTEGER,
+    first_departure_date TEXT, direct_price REAL, agency_price REAL,
+    agency_rebate_pct REAL, deposit REAL, fee_note TEXT, transportation TEXT,
+    visa_requirement TEXT, product_description TEXT, reference_tour_code TEXT,
+    fee_description TEXT, booking_notice TEXT, tag TEXT, cover_color TEXT,
+    keywords TEXT, city_code TEXT, cover_image TEXT,
+    created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))
+  )`);
+
+  const tourCnt = db.prepare('SELECT COUNT(*) as c FROM tour_products').get();
+  if (tourCnt.c === 0) {
+    const tours = [
+      ['GFG001','東京賞櫻五日','東京','亞洲','飛機',5,48000,38600,10,5000,'2026-03-28','早鳥','https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=800'],
+      ['GFG002','北海道溫泉六日','札幌','亞洲','飛機',6,64000,51200,12,8000,'2026-04-10','熱銷','https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=800'],
+      ['GFG003','首爾自由行四日','首爾','亞洲','飛機',4,28000,19800,8,3000,'2026-05-02','早鳥','https://images.unsplash.com/photo-1538485399081-7191377e8241?w=800'],
+      ['GFG004','義大利經典十日','羅馬','歐洲','飛機',10,160000,118000,9,20000,'2026-06-15','','https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=800'],
+      ['GFG005','釜山賞櫻五日','釜山','亞洲','飛機',5,36000,25600,11,4000,'2026-03-30','熱銷','https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800'],
+      ['GFG006','峇里島渡假五日','峇里島','東南亞','飛機',5,45000,28900,10,5000,'2026-07-20','','https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800'],
+      ['GFG007','京都奈良六日','京都','亞洲','飛機',6,54000,43200,10,8000,'2026-11-15','早鳥','https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800'],
+      ['GFG008','瑞士雙峰八日','蘇黎世','歐洲','飛機',8,197500,145000,8,25000,'2026-08-05','','https://images.unsplash.com/photo-1527668752968-14dc70a27c95?w=800'],
+    ];
+    const insT = db.prepare(`INSERT INTO tour_products
+      (tour_product_no,tour_product_name,arrival_city,region,transportation,duration_days,
+       direct_price,agency_price,agency_rebate_pct,deposit,first_departure_date,tag,cover_image)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+    tours.forEach(t => insT.run(...t));
+    console.log('[Tours] Seeded', tours.length);
+  }
+}
+
 // VOUCHER TABLE + SEED
 // ================================================================
 if (db) {
