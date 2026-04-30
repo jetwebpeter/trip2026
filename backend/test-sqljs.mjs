@@ -1,0 +1,10 @@
+import initSqlJs from 'sql.js';
+console.log('Importing sql.js...');
+const SQL = await initSqlJs();
+console.log('SQL initialized:', SQL);
+const db = new SQL.Database();
+db.run('CREATE TABLE test (id INTEGER, name TEXT)');
+db.run('INSERT INTO test VALUES (1, "hello")');
+const result = db.exec('SELECT * FROM test');
+console.log('Result:', JSON.stringify(result));
+console.log('SUCCESS');
