@@ -17,19 +17,6 @@ const nodeFetch = globalThis.fetch;
 
 // ================================================================
 
-// DEBUG endpoint
-app.get('/api/debug', (req, res) => {
-  try {
-    const info = {
-      db: db ? 'connected' : 'null',
-      tours: db ? db.prepare('SELECT COUNT(*) as c FROM tour_products').get().c : 'N/A',
-      vouchers: db ? db.prepare('SELECT COUNT(*) as c FROM land_services').get().c : 'N/A',
-      cwd: process.cwd(),
-      node: process.version,
-    };
-    res.json(info);
-  } catch(e) { res.json({ error: e.message }); }
-});
 
 // HOTEL APIs
 // ================================================================
