@@ -86,7 +86,7 @@ app.get('/api/hotels/map', async (req, res) => {
 // ================================================================
 // FLIGHTS
 // ================================================================
-app.get('/api/flights/search', async (req, res) => {
+app.get(['/api/flights/search', '/api/flights'], async (req, res) => {
   const { departure_id, arrival_id, outbound_date, return_date, type = 1, travel_class = 1,
     adults = 1, children = 0, currency = 'TWD', hl = 'zh-tw', gl = 'tw', stops, sort_by } = req.query;
   if (!departure_id || !arrival_id || !outbound_date)
