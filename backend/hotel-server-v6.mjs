@@ -276,16 +276,13 @@ app.get('/api/admin/tours', (req, res) => {
   res.json({ items: db.prepare('SELECT * FROM tour_products ORDER BY created_at DESC').all() });
 });
 
-// ================================================================
-// PROXY /api/tours TO PORT 3001
-// ================================================================
-app.use('/api/tours', async (req, res) => {
-  try {
-    const url = 'http://localhost:3001/api/tours' + (req.url === '/' ? '' : req.url);
-    const resp = await nodeFetch(url);
-    const data = await resp.json();
-    res.json(data);
-  } catch (e) { res.status(502).json({ error: 'Port 3001: ' + e.message }); }
+// TOURS - Direct DB query
+app.get('/api/tours', (req, res) => {
+  if (!db) return res.json({ items: [], total: 0 });
+  const { page = 1, pageSize = 6 } = req.query;
+  const total = db.prepare('SELECT COUNT(*) as c FROM tour_products').get().c;
+  const items = db.prepare('SELECT * FROM tour_products ORDER BY tour_product_no LIMIT ? OFFSET ?').all(+pageSize, (+page-1) * +pageSize);
+  res.json({ total, page: +page, pageSize: +pageSize, items });
 });
 
 // ================================================================
