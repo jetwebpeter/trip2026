@@ -112,29 +112,29 @@ export default function RailSearch() {
 
             {/* From/To/Date/Search */}
             <div style={{display:'flex',gap:10,alignItems:'flex-end',flexWrap:'wrap'}}>
-              <div style={{flex:1,minWidth:130}}>
-                <div style={{fontSize:11,color:'#94a3b8',fontWeight:600,marginBottom:4}}>出發城市</div>
+              <div style={{flex:2,minWidth:200}}>
+                <div style={{fontSize:11,color:'#64748b',fontWeight:600,marginBottom:4}}>出發城市</div>
                 <select value={fromCity} onChange={e=>setFromCity(e.target.value)}
-                  style={{width:'100%',padding:'10px 12px',border:'1.5px solid #e2e8f0',borderRadius:8,fontSize:14,background:'#fff'}}>
+                  style={{width:'100%',padding:'12px 14px',border:'1.5px solid #e2e8f0',borderRadius:8,fontSize:15,background:'#fff',height:46}}>
                   {zd.cities.map(c=><option key={c.id} value={c.id}>{c.name}, {c.country}</option>)}
                 </select>
               </div>
               <button onClick={()=>{const t=fromCity;setFromCity(toCity);setToCity(t);}}
-                style={{padding:'10px 12px',border:'1.5px solid #e2e8f0',borderRadius:8,background:'#f8fafc',cursor:'pointer',fontSize:18,marginBottom:0}}>⇄</button>
-              <div style={{flex:1,minWidth:130}}>
-                <div style={{fontSize:11,color:'#94a3b8',fontWeight:600,marginBottom:4}}>抵達城市</div>
+                style={{padding:'12px 14px',border:'1.5px solid #e2e8f0',borderRadius:8,background:'#f1f5f9',cursor:'pointer',fontSize:20,alignSelf:'flex-end',height:46,display:'flex',alignItems:'center'}}>⇄</button>
+              <div style={{flex:2,minWidth:200}}>
+                <div style={{fontSize:11,color:'#64748b',fontWeight:600,marginBottom:4}}>抵達城市</div>
                 <select value={toCity} onChange={e=>setToCity(e.target.value)}
-                  style={{width:'100%',padding:'10px 12px',border:'1.5px solid #e2e8f0',borderRadius:8,fontSize:14,background:'#fff'}}>
+                  style={{width:'100%',padding:'12px 14px',border:'1.5px solid #e2e8f0',borderRadius:8,fontSize:15,background:'#fff',height:46}}>
                   {zd.cities.map(c=><option key={c.id} value={c.id}>{c.name}, {c.country}</option>)}
                 </select>
               </div>
-              <div style={{flex:1,minWidth:130}}>
-                <div style={{fontSize:11,color:'#94a3b8',fontWeight:600,marginBottom:4}}>出發日期</div>
+              <div style={{flex:1.5,minWidth:160}}>
+                <div style={{fontSize:11,color:'#64748b',fontWeight:600,marginBottom:4}}>出發日期</div>
                 <input type="date" value={date} onChange={e=>setDate(e.target.value)}
-                  style={{width:'100%',padding:'10px 12px',border:'1.5px solid #e2e8f0',borderRadius:8,fontSize:14,boxSizing:'border-box' as const}}/>
+                  style={{width:'100%',padding:'12px 14px',border:'1.5px solid #e2e8f0',borderRadius:8,fontSize:15,boxSizing:'border-box' as const,height:46}}/>
               </div>
               <button onClick={handleSearch}
-                style={{padding:'10px 28px',background:'linear-gradient(135deg,#e63946,#c1121f)',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontSize:15,fontWeight:700,whiteSpace:'nowrap' as const}}>
+                style={{padding:'12px 36px',background:'linear-gradient(135deg,#e63946,#c1121f)',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontSize:16,fontWeight:700,whiteSpace:'nowrap' as const,alignSelf:'flex-end',height:46}}>
                 搜索
               </button>
             </div>
