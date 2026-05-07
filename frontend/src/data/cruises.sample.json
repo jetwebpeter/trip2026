@@ -1,0 +1,67 @@
+{
+  "exchangeRatesToTwd": {
+    "USD": 32.4,
+    "SGD": 24.2
+  },
+  "updatedAt": "2026-05-05",
+  "source": "temporary-json",
+  "items": [
+    {
+      "id": "DCL-SIN-3N-ADVENTURE-INSIDE",
+      "shipName": "Disney Adventure",
+      "cruiseLine": "Disney Cruise Line",
+      "title": "Disney Adventure 新加坡 3 晚海上假期",
+      "departurePort": "Singapore Marina Bay Cruise Centre",
+      "arrivalPort": "Singapore",
+      "registry": "Bahamas",
+      "nights": 3,
+      "departureDate": "2026-07-18",
+      "cabinType": "Inside Stateroom",
+      "currency": "USD",
+      "priceFrom": 508,
+      "taxesAndFees": 138,
+      "imageUrl": "https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=1200&auto=format&fit=crop",
+      "badge": "新加坡出發",
+      "theme": "Disney, Pixar, Marvel",
+      "features": ["3 晚海上假期", "7 個主題區域", "角色見面", "劇場娛樂"]
+    },
+    {
+      "id": "DCL-SIN-4N-ADVENTURE-OCEANVIEW",
+      "shipName": "Disney Adventure",
+      "cruiseLine": "Disney Cruise Line",
+      "title": "Disney Adventure 新加坡 4 晚家庭郵輪",
+      "departurePort": "Singapore Marina Bay Cruise Centre",
+      "arrivalPort": "Singapore",
+      "registry": "Bahamas",
+      "nights": 4,
+      "departureDate": "2026-08-02",
+      "cabinType": "Oceanview Stateroom",
+      "currency": "SGD",
+      "priceFrom": 1180,
+      "taxesAndFees": 210,
+      "imageUrl": "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=1200&auto=format&fit=crop",
+      "badge": "親子首選",
+      "theme": "Disney Imagination Garden",
+      "features": ["4 晚完整航程", "親子俱樂部", "海上煙火", "主題餐飲"]
+    },
+    {
+      "id": "DCL-SIN-4N-ADVENTURE-VERANDAH",
+      "shipName": "Disney Adventure",
+      "cruiseLine": "Disney Cruise Line",
+      "title": "Disney Adventure 新加坡 4 晚陽台艙",
+      "departurePort": "Singapore Marina Bay Cruise Centre",
+      "arrivalPort": "Singapore",
+      "registry": "Bahamas",
+      "nights": 4,
+      "departureDate": "2026-09-12",
+      "cabinType": "Verandah Stateroom",
+      "currency": "USD",
+      "priceFrom": 1680,
+      "taxesAndFees": 226,
+      "imageUrl": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop",
+      "badge": "陽台艙",
+      "theme": "Marvel Landing",
+      "features": ["私人陽台", "大型娛樂設施", "成人休憩區", "特色商店"]
+    }
+  ]
+}
