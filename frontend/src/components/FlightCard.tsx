@@ -34,7 +34,7 @@ interface FlightData {
   carbon_emissions?: CarbonEmissions;
 }
 
-const FlightCard: React.FC<{ data: FlightData }> = ({ data }) => {
+const FlightCard: React.FC<{ data: FlightData, onSelect?: (data: FlightData) => void, disabled?: boolean, buttonText?: string, hidePrice?: boolean }> = ({ data, onSelect, disabled, buttonText = '選擇航班', hidePrice = false }) => {
   const outbound = data.flights[0];
   const formatTime = (timeStr: string) => {
     const d = new Date(timeStr);
@@ -45,6 +45,31 @@ const FlightCard: React.FC<{ data: FlightData }> = ({ data }) => {
     const h = Math.floor(min / 60);
     const m = min % 60;
     return `${h}h ${m}m`;
+  };
+
+  const getCityName = (code: string) => {
+    const map: Record<string, string> = {
+      'TPE': '台北(桃園)',
+      'TSA': '台北(松山)',
+      'SIN': '新加坡(樟宜)',
+      'HKG': '香港(赤鱲角)',
+      'MFM': '澳門(國際)',
+      'TYO': '東京(市區)',
+      'NRT': '東京(成田)',
+      'HND': '東京(羽田)',
+      'OSA': '大阪(市區)',
+      'KIX': '大阪(關西)',
+      'ITM': '大阪(伊丹)',
+      'SEL': '首爾(市區)',
+      'ICN': '首爾(仁川)',
+      'GMP': '首爾(金浦)',
+      'BKK': '曼谷(素萬那普)',
+      'DMK': '曼谷(廊曼)',
+      'DPS': '峇里島(伍拉·賴)',
+      'OKA': '沖繩(那霸)',
+      'SGN': '胡志明(新山一)',
+    };
+    return map[code] || code;
   };
 
   return (
@@ -68,7 +93,7 @@ const FlightCard: React.FC<{ data: FlightData }> = ({ data }) => {
         <div className="flight-timeline">
           <div className="time-point">
             <div className="time">{formatTime(outbound.departure_airport.time)}</div>
-            <div className="airport-code">{outbound.departure_airport.id}</div>
+            <div className="airport-code">{getCityName(outbound.departure_airport.id)}</div>
           </div>
           
           <div className="duration-path">
@@ -84,7 +109,7 @@ const FlightCard: React.FC<{ data: FlightData }> = ({ data }) => {
 
           <div className="time-point">
             <div className="time">{formatTime(outbound.arrival_airport.time)}</div>
-            <div className="airport-code">{outbound.arrival_airport.id}</div>
+            <div className="airport-code">{getCityName(outbound.arrival_airport.id)}</div>
           </div>
         </div>
 
@@ -107,11 +132,20 @@ const FlightCard: React.FC<{ data: FlightData }> = ({ data }) => {
       </div>
 
       <div className="flight-card-action">
-        <div className="price-tag">
-          <span className="currency">TWD</span>
-          <span className="amount">{data.price.toLocaleString()}</span>
-        </div>
-        <button className="btn-select">選擇航班</button>
+        {!hidePrice && (
+          <div className="price-tag">
+            <span className="currency">TWD</span>
+            <span className="amount">{data.price ? data.price.toLocaleString() : '---'}</span>
+          </div>
+        )}
+        <button 
+          className="btn-select" 
+          onClick={() => onSelect && onSelect(data)}
+          disabled={disabled}
+          style={disabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+        >
+          {disabled && buttonText === '選擇航班' ? '不可選擇' : buttonText}
+        </button>
       </div>
     </div>
   );
