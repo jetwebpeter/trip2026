@@ -26,14 +26,14 @@ const Header: React.FC = () => {
             className={`nav-link ${isActive('/flights') ? 'active' : ''}`}
           >
             <Plane size={18} />
-            <span>航班查詢</span>
+            <span>機票</span>
           </Link>
           <Link
             to="/hotels"
             className={`nav-link ${isActive('/hotels') ? 'active' : ''}`}
           >
             <Building2 size={18} />
-            <span>酒店搜尋</span>
+            <span>酒店</span>
           </Link>
           <Link
             to="/vouchers"
