@@ -86,14 +86,19 @@ app.get('/api/flights', async (req, res) => {
   try {
     const { 
       departure_id, arrival_id, outbound_date, return_date, 
-      currency = 'TWD', adults = '1', travel_class = '1', stops = '1' 
+      currency = 'TWD', adults = '1', children = '0', infants_in_seat = '0', infants_on_lap = '0',
+      travel_class = '1', stops = '', type
     } = req.query;
 
     if (!departure_id || !arrival_id || !outbound_date) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    const results = await getJson({
+    // Determine the type: if "type" is explicitly provided, use it; otherwise infer from return_date
+    // Google Flights API: type="1" is Round trip, type="2" is One way
+    const flightType = type ? type : (return_date ? "1" : "2");
+
+    const searchParams = {
       api_key: SERPAPI_KEY,
       engine: "google_flights",
       hl: "zh-tw",
@@ -101,17 +106,24 @@ app.get('/api/flights', async (req, res) => {
       departure_id,
       arrival_id,
       outbound_date,
-      return_date,
       currency,
       adults,
-      children: "0",
-      infants_in_seat: "0",
-      infants_on_lap: "0",
-      type: "1", // Round trip
-      travel_class,
-      stops
-    });
+      children,
+      infants_in_seat,
+      infants_on_lap,
+      type: flightType,
+      travel_class
+    };
 
+    if (flightType === "1" && return_date) {
+      searchParams.return_date = return_date;
+    }
+
+    if (stops !== '') {
+      searchParams.stops = stops;
+    }
+
+    const results = await getJson(searchParams);
     res.json(results);
   } catch (error) {
     console.error('SerpAPI error:', error);

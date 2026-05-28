@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Plane, Compass, Building2, Ship } from 'lucide-react';
+import { Plane, Compass, Building2, Ship, ChevronDown } from 'lucide-react';
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -21,13 +21,23 @@ const Header: React.FC = () => {
             <Compass size={18} />
             <span>團體旅遊</span>
           </Link>
-          <Link
-            to="/flights"
-            className={`nav-link ${isActive('/flights') ? 'active' : ''}`}
-          >
-            <Plane size={18} />
-            <span>機票</span>
-          </Link>
+          <div className="nav-dropdown-wrapper">
+            <button
+              className={`nav-link dropdown-trigger ${isActive('/flights') ? 'active' : ''}`}
+            >
+              <Plane size={18} />
+              <span>Flight</span>
+              <ChevronDown size={14} className="dropdown-caret" />
+            </button>
+            <div className="nav-dropdown shadow-lg">
+              <Link
+                to="/flights"
+                className={`dropdown-item ${isActive('/flights') ? 'active' : ''}`}
+              >
+                <span>🔍 航班查詢</span>
+              </Link>
+            </div>
+          </div>
           <Link
             to="/hotels"
             className={`nav-link ${isActive('/hotels') ? 'active' : ''}`}
