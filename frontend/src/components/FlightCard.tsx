@@ -152,7 +152,7 @@ const FlightCard: React.FC<{
                 {outbound.departure_airport.id}
               </div>
               <div className="airport-name text-xs text-gray-400 font-medium">
-                {getCityName(outbound.departure_airport.id)}
+                {outbound.departure_airport.name}
               </div>
             </div>
             
@@ -190,7 +190,7 @@ const FlightCard: React.FC<{
                 {finalSegment.arrival_airport.id}
               </div>
               <div className="airport-name text-xs text-gray-400 font-medium">
-                {getCityName(finalSegment.arrival_airport.id)}
+                {finalSegment.arrival_airport.name}
               </div>
             </div>
           </div>
@@ -330,7 +330,7 @@ const FlightCard: React.FC<{
                         <Clock size={10} className="text-orange-600" />
                       </div>
                       <div className="layover-content inline-flex items-center gap-2 bg-orange-50 border border-orange-100 rounded-full px-4 py-1.5 text-xs text-orange-800 font-bold shadow-sm">
-                        <span>轉機於 {getCityName(seg.arrival_airport.id)} ({seg.arrival_airport.id})</span>
+                        <span>轉機於 {seg.arrival_airport.name} ({seg.arrival_airport.id})</span>
                         <span className="text-orange-400">·</span>
                         <span>等待時間 {calculateLayover(seg.arrival_airport.time, segments[idx + 1].departure_airport.time)}</span>
                       </div>

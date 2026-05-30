@@ -35,7 +35,7 @@ const HotelCard: React.FC<{ hotel: Hotel }> = ({ hotel }) => {
         />
         <div className="hotel-rating-overlay">
           <Star size={14} className="fill-current text-yellow-400" />
-          <span>{hotel.rating}</span>
+          <span>{(hotel.rating || 0).toFixed(1)}</span>
         </div>
       </div>
       

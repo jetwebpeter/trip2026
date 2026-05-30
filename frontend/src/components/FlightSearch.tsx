@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Search, MapPin, Calendar, Users, Loader2, AlertCircle, Plane, 
+  Search, MapPin, Calendar, Users, Loader2, AlertCircle, Plane, Globe,
   ChevronDown, ArrowUpDown, Plus, Minus, Info, SlidersHorizontal, Check, RefreshCw 
 } from 'lucide-react';
 import FlightCard from './FlightCard';
 
 const popularAirports = [
-  { city: '台北 (桃園)', code: 'TPE', name: '桃園國際機場' },
-  { city: '新加坡', code: 'SIN', name: '樟宜國際機場' },
-  { city: '東京 (成田)', code: 'NRT', name: '成田國際機場' },
-  { city: '東京 (羽田)', code: 'HND', name: '羽田國際機場' },
-  { city: '香港', code: 'HKG', name: '香港國際機場' },
-  { city: '首爾 (仁川)', code: 'ICN', name: '仁川國際機場' },
-  { city: '曼谷 (素萬那普)', code: 'BKK', name: '素萬那普機場' },
-  { city: '大阪 (關西)', code: 'KIX', name: '關西國際機場' },
+  { city: '台北 (桃園) / Taipei (TPE)', code: 'TPE', name: '桃園國際機場 / Taoyuan Airport', type: 'airport' },
+  { city: '新加坡 / Singapore (SIN)', code: 'SIN', name: '樟宜國際機場 / Changi Airport', type: 'airport' },
+  { city: '東京 (成田) / Tokyo (NRT)', code: 'NRT', name: '成田國際機場 / Narita Airport', type: 'airport' },
+  { city: '東京 (羽田) / Tokyo (HND)', code: 'HND', name: '羽田國際機場 / Haneda Airport', type: 'airport' },
+  { city: '香港 / Hong Kong (HKG)', code: 'HKG', name: '香港國際機場 / Hong Kong Airport', type: 'airport' },
+  { city: '首爾 (仁川) / Seoul (ICN)', code: 'ICN', name: '仁川國際機場 / Incheon Airport', type: 'airport' },
+  { city: '曼谷 / Bangkok (BKK)', code: 'BKK', name: '素萬那普機場 / Suvarnabhumi Airport', type: 'airport' },
+  { city: '大阪 (關西) / Osaka (KIX)', code: 'KIX', name: '關西國際機場 / Kansai Airport', type: 'airport' },
 ];
 
 const FlightSearch: React.FC = () => {
@@ -64,6 +64,43 @@ const FlightSearch: React.FC = () => {
   const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
   const [showDepSuggestions, setShowDepSuggestions] = useState(false);
   const [showArrSuggestions, setShowArrSuggestions] = useState(false);
+
+  // Autocomplete states
+  const [displayDep, setDisplayDep] = useState('台北 (桃園)');
+  const [displayArr, setDisplayArr] = useState('新加坡');
+  const [depSuggestionsList, setDepSuggestionsList] = useState<any[]>([]);
+  const [arrSuggestionsList, setArrSuggestionsList] = useState<any[]>([]);
+
+  // Fetch autocomplete debounced
+  useEffect(() => {
+    if (displayDep.length < 2) {
+      setDepSuggestionsList([]);
+      return;
+    }
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/flights/autocomplete?q=${encodeURIComponent(displayDep)}`);
+        const d = await res.json();
+        if (d.suggestions) setDepSuggestionsList(d.suggestions);
+      } catch (e) {}
+    }, 400);
+    return () => clearTimeout(t);
+  }, [displayDep]);
+
+  useEffect(() => {
+    if (displayArr.length < 2) {
+      setArrSuggestionsList([]);
+      return;
+    }
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/flights/autocomplete?q=${encodeURIComponent(displayArr)}`);
+        const d = await res.json();
+        if (d.suggestions) setArrSuggestionsList(d.suggestions);
+      } catch (e) {}
+    }, 400);
+    return () => clearTimeout(t);
+  }, [displayArr]);
 
   const passengerRef = useRef<HTMLDivElement>(null);
   const depRef = useRef<HTMLDivElement>(null);
@@ -127,8 +164,9 @@ const FlightSearch: React.FC = () => {
     setError(null);
     setResults(null);
 
-    const actualDeparture = getAirportCode(paramsToUse.departure_id);
-    const actualArrival = getAirportCode(paramsToUse.arrival_id);
+    const checkId = (id: string) => String(id).startsWith('/') ? id : getAirportCode(id);
+    const actualDeparture = checkId(paramsToUse.departure_id);
+    const actualArrival = checkId(paramsToUse.arrival_id);
 
     const apiParams: any = {
       departure_id: actualDeparture,
@@ -236,6 +274,9 @@ const FlightSearch: React.FC = () => {
       departure_id: prev.arrival_id,
       arrival_id: prev.departure_id
     }));
+    const tempDep = displayDep;
+    setDisplayDep(displayArr);
+    setDisplayArr(tempDep);
   };
 
   const processFlights = (flightsList: any[]) => {
@@ -263,243 +304,302 @@ const FlightSearch: React.FC = () => {
 
   return (
     <div className="container flight-search-container">
-      {/* Search Hero banner */}
-      <div className="search-hero">
-        <div className="plane-graphic-wrapper">
-          <Plane className="hero-plane-icon" size={32} />
+      {/* HERO & SEARCH */}
+      <div className="hotel-hero-section" style={{ marginTop: '20px' }}>
+        <div className="hotel-hero-bg" style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #4f46e5 60%, #6366f1 85%, #818cf8 100%)' }} />
+        <div className="hotel-hero-content">
+          <div className="hotel-hero-badge">✈️ 全球機票即時比價</div>
+          <h1 className="hotel-hero-title">開啟您的探險之旅</h1>
+          <p className="hotel-hero-subtitle">搜尋全球優質航線與最低票價，開啟一段令人驚嘆的旅程</p>
         </div>
-        <h1>開啟您的探險之旅</h1>
-        <p>搜尋全球優質航線與最低票價，開啟一段令人驚嘆的旅程</p>
-      </div>
+        
+        <div className="hotel-search-card">
+          {/* Top Controls */}
+          <div className="search-bar-top-controls" style={{ padding: '16px', borderBottom: '1px solid #e8ecf2', display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* Trip Type capsule selector */}
+            <div className="hotel-view-toggle" style={{ margin: 0, padding: '4px', background: '#f1f5f9', borderRadius: '10px' }}>
+              <button 
+                type="button"
+                className={`hotel-view-btn ${tripType === 'round-trip' ? 'active' : ''}`} 
+                onClick={() => {
+                  setTripType('round-trip');
+                  setSelectedOutbound(null);
+                  setSelectedReturn(null);
+                  setResults(null);
+                }}
+              >
+                來回航班
+              </button>
+              <button 
+                type="button"
+                className={`hotel-view-btn ${tripType === 'one-way' ? 'active' : ''}`} 
+                onClick={() => {
+                  setTripType('one-way');
+                  setSelectedOutbound(null);
+                  setSelectedReturn(null);
+                  setResults(null);
+                }}
+              >
+                單程機票
+              </button>
+            </div>
 
-      {/* Advanced Flight Search Bar panel */}
-      <div className="flight-search-bar-wrapper shadow-2xl">
-        {/* Top Controls */}
-        <div className="search-bar-top-controls">
-          {/* Trip Type capsule selector */}
-          <div className="trip-type-capsule">
-            <button 
-              type="button"
-              className={tripType === 'round-trip' ? 'active' : ''} 
-              onClick={() => {
-                setTripType('round-trip');
-                setSelectedOutbound(null);
-                setSelectedReturn(null);
-                setResults(null);
-              }}
-            >
-              來回航班
-            </button>
-            <button 
-              type="button"
-              className={tripType === 'one-way' ? 'active' : ''} 
-              onClick={() => {
-                setTripType('one-way');
-                setSelectedOutbound(null);
-                setSelectedReturn(null);
-                setResults(null);
-              }}
-            >
-              單程機票
-            </button>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              {/* Passenger Selector Counter */}
+              <div className="dropdown-wrapper" ref={passengerRef} style={{ position: 'relative' }}>
+                <button 
+                  type="button" 
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '8px', background: 'transparent', border: 'none', color: '#475569', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}
+                  onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                >
+                  <Users size={16} />
+                  <span>{totalPassengerCount} 位旅客</span>
+                  <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: showPassengerDropdown ? 'rotate(180deg)' : 'none' }} />
+                </button>
+                
+                {showPassengerDropdown && (
+                  <div className="passenger-picker-card shadow-xl animate-fade-in" style={{ position: 'absolute', top: '100%', right: 0, marginTop: '8px', background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '16px', zIndex: 50, width: '320px' }}>
+                    <div className="picker-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <div className="label-group">
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>成人</div>
+                        <div style={{ fontSize: '12px', color: '#64748b' }}>滿 12 歲</div>
+                      </div>
+                      <div className="counter" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button type="button" onClick={() => adjustPassenger('adults', 'dec')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Minus size={14} /></button>
+                        <span style={{ width: '16px', textAlign: 'center', fontWeight: 600, color: '#1e293b' }}>{passengers.adults}</span>
+                        <button type="button" onClick={() => adjustPassenger('adults', 'inc')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Plus size={14} /></button>
+                      </div>
+                    </div>
+                    <div className="picker-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <div className="label-group">
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>兒童</div>
+                        <div style={{ fontSize: '12px', color: '#64748b' }}>2 - 11 歲</div>
+                      </div>
+                      <div className="counter" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button type="button" onClick={() => adjustPassenger('children', 'dec')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Minus size={14} /></button>
+                        <span style={{ width: '16px', textAlign: 'center', fontWeight: 600, color: '#1e293b' }}>{passengers.children}</span>
+                        <button type="button" onClick={() => adjustPassenger('children', 'inc')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Plus size={14} /></button>
+                      </div>
+                    </div>
+                    <div className="picker-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <div className="label-group">
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>嬰兒 (佔位)</div>
+                        <div style={{ fontSize: '12px', color: '#64748b' }}>低於 2 歲</div>
+                      </div>
+                      <div className="counter" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button type="button" onClick={() => adjustPassenger('infants_in_seat', 'dec')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Minus size={14} /></button>
+                        <span style={{ width: '16px', textAlign: 'center', fontWeight: 600, color: '#1e293b' }}>{passengers.infants_in_seat}</span>
+                        <button type="button" onClick={() => adjustPassenger('infants_in_seat', 'inc')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Plus size={14} /></button>
+                      </div>
+                    </div>
+                    <div className="picker-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <div className="label-group">
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>嬰兒 (不佔位)</div>
+                        <div style={{ fontSize: '12px', color: '#64748b' }}>抱在膝上</div>
+                      </div>
+                      <div className="counter" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button type="button" onClick={() => adjustPassenger('infants_on_lap', 'dec')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Minus size={14} /></button>
+                        <span style={{ width: '16px', textAlign: 'center', fontWeight: 600, color: '#1e293b' }}>{passengers.infants_on_lap}</span>
+                        <button type="button" onClick={() => adjustPassenger('infants_on_lap', 'inc')} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #cbd5e1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}><Plus size={14} /></button>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <button type="button" onClick={() => setShowPassengerDropdown(false)} style={{ padding: '8px 24px', background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}>確定</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Cabin Class Selector */}
+              <div className="cabin-class-select-wrapper">
+                <select 
+                  value={cabinClass} 
+                  onChange={e => setCabinClass(e.target.value as any)}
+                  style={{ padding: '8px 16px', borderRadius: '8px', background: 'transparent', border: 'none', color: '#475569', fontWeight: 600, fontSize: '14px', cursor: 'pointer', outline: 'none', appearance: 'none' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                >
+                  <option value="1">經濟艙</option>
+                  <option value="2">優選經濟艙</option>
+                  <option value="3">商務艙</option>
+                  <option value="4">頭等艙</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          {/* Passenger Selector Counter */}
-          <div className="dropdown-wrapper" ref={passengerRef}>
-            <button 
-              type="button" 
-              className="control-btn"
-              onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
-            >
-              <Users size={16} />
-              <span>{totalPassengerCount} 位旅客</span>
-              <ChevronDown size={14} className={`caret ${showPassengerDropdown ? 'open' : ''}`} />
-            </button>
-            
-            {showPassengerDropdown && (
-              <div className="passenger-picker-card shadow-xl animate-fade-in">
-                <div className="picker-row">
-                  <div className="label-group">
-                    <span className="title">成人</span>
-                    <span className="desc">滿 12 歲</span>
-                  </div>
-                  <div className="counter">
-                    <button type="button" onClick={() => adjustPassenger('adults', 'dec')} className="btn-counter-adjust"><Minus size={14} /></button>
-                    <span className="count-num">{passengers.adults}</span>
-                    <button type="button" onClick={() => adjustPassenger('adults', 'inc')} className="btn-counter-adjust"><Plus size={14} /></button>
-                  </div>
-                </div>
-                <div className="picker-row">
-                  <div className="label-group">
-                    <span className="title">兒童</span>
-                    <span className="desc">2 - 11 歲</span>
-                  </div>
-                  <div className="counter">
-                    <button type="button" onClick={() => adjustPassenger('children', 'dec')} className="btn-counter-adjust"><Minus size={14} /></button>
-                    <span className="count-num">{passengers.children}</span>
-                    <button type="button" onClick={() => adjustPassenger('children', 'inc')} className="btn-counter-adjust"><Plus size={14} /></button>
-                  </div>
-                </div>
-                <div className="picker-row">
-                  <div className="label-group">
-                    <span className="title">嬰兒 (佔位)</span>
-                    <span className="desc">低於 2 歲</span>
-                  </div>
-                  <div className="counter">
-                    <button type="button" onClick={() => adjustPassenger('infants_in_seat', 'dec')} className="btn-counter-adjust"><Minus size={14} /></button>
-                    <span className="count-num">{passengers.infants_in_seat}</span>
-                    <button type="button" onClick={() => adjustPassenger('infants_in_seat', 'inc')} className="btn-counter-adjust"><Plus size={14} /></button>
-                  </div>
-                </div>
-                <div className="picker-row">
-                  <div className="label-group">
-                    <span className="title">嬰兒 (不佔位)</span>
-                    <span className="desc">抱在膝上</span>
-                  </div>
-                  <div className="counter">
-                    <button type="button" onClick={() => adjustPassenger('infants_on_lap', 'dec')} className="btn-counter-adjust"><Minus size={14} /></button>
-                    <span className="count-num">{passengers.infants_on_lap}</span>
-                    <button type="button" onClick={() => adjustPassenger('infants_on_lap', 'inc')} className="btn-counter-adjust"><Plus size={14} /></button>
-                  </div>
-                </div>
-                <div className="picker-footer text-right">
-                  <button type="button" onClick={() => setShowPassengerDropdown(false)} className="btn-done">確定</button>
+          <form onSubmit={handleSearch} style={{ padding: '16px' }}>
+            <div className="hotel-search-fields" style={{ display: 'flex', flexWrap: 'wrap', gap: '0', overflow: 'visible', borderRadius: '14px', background: '#fff' }}>
+              
+              {/* Departure Input */}
+              <div className="hotel-field" ref={depRef} style={{ flex: '1 1 200px', borderTopLeftRadius: '14px', borderBottomLeftRadius: '14px' }}>
+                <div className="hotel-field-icon"><Plane size={18} /></div>
+                <div className="hotel-field-content" style={{ position: 'relative' }}>
+                  <span className="hotel-field-label">出發地</span>
+                  <input 
+                    type="text" 
+                    placeholder="機場名稱或代碼" 
+                    className="hotel-field-input"
+                    value={displayDep}
+                    onFocus={() => setShowDepSuggestions(true)}
+                    onChange={e => {
+                      setDisplayDep(e.target.value);
+                      setSearchParams({...searchParams, departure_id: e.target.value});
+                      setShowDepSuggestions(true);
+                    }}
+                    required 
+                  />
+                  {showDepSuggestions && (
+                    <div className="suggestions-panel shadow-lg" style={{ position: 'absolute', top: '100%', left: '-46px', width: '380px', marginTop: '16px', background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', zIndex: 60, maxHeight: '300px', overflowY: 'auto', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}>
+                      <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: 700, color: '#94a3b8', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>{displayDep.length < 2 ? '熱門出發地' : '搜尋建議'}</div>
+                      {(displayDep.length < 2 ? popularAirports : depSuggestionsList).map((s: any, i: number) => {
+                        const sId = s.id || s.code;
+                        const sName = s.name || s.city;
+                        return (
+                          <div 
+                            key={sId || i} 
+                            style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center', cursor: 'pointer', borderBottom: '1px solid #f1f5f9' }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#f0f7ff'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            onClick={() => {
+                              setSearchParams({ ...searchParams, departure_id: sId });
+                              setDisplayDep(sName);
+                              setShowDepSuggestions(false);
+                            }}
+                          >
+                            <div style={{ color: '#64748b' }}>
+                              {s.type === 'airport' ? <Plane size={16} /> : s.type === 'country' ? <Globe size={16} /> : <MapPin size={16} />}
+                            </div>
+                            <div>
+                              <div style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                {sName}
+                                {s.code && <span style={{ background: '#f1f5f9', color: '#64748b', fontSize: '11px', padding: '2px 6px', borderRadius: '4px' }}>{s.code}</span>}
+                              </div>
+                              <div style={{ fontSize: '12px', color: '#64748b' }}>{s.description || s.city || ''}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* Cabin Class Selector */}
-          <div className="cabin-class-select-wrapper">
-            <select 
-              value={cabinClass} 
-              onChange={e => setCabinClass(e.target.value as any)}
-              className="cabin-class-select"
-            >
-              <option value="1">經濟艙</option>
-              <option value="2">優選經濟艙</option>
-              <option value="3">商務艙</option>
-              <option value="4">頭等艙</option>
-            </select>
-          </div>
+              <div className="hotel-field-divider" />
+              
+              {/* Swap Button (Desktop floating) */}
+              <button type="button" onClick={swapAirports} style={{ position: 'absolute', left: '26%', top: '65%', transform: 'translate(-50%, -50%)', zIndex: 10, width: '32px', height: '32px', borderRadius: '50%', background: '#fff', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--primary)', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }} title="交換機場">
+                <RefreshCw size={14} />
+              </button>
+
+              {/* Arrival Input */}
+              <div className="hotel-field" ref={arrRef} style={{ flex: '1 1 200px' }}>
+                <div className="hotel-field-icon"><MapPin size={18} /></div>
+                <div className="hotel-field-content" style={{ position: 'relative' }}>
+                  <span className="hotel-field-label">目的地</span>
+                  <input 
+                    type="text" 
+                    placeholder="機場名稱或代碼" 
+                    className="hotel-field-input"
+                    value={displayArr}
+                    onFocus={() => setShowArrSuggestions(true)}
+                    onChange={e => {
+                      setDisplayArr(e.target.value);
+                      setSearchParams({...searchParams, arrival_id: e.target.value});
+                      setShowArrSuggestions(true);
+                    }}
+                    required 
+                  />
+                  {showArrSuggestions && (
+                    <div className="suggestions-panel shadow-lg" style={{ position: 'absolute', top: '100%', left: '-46px', width: '380px', marginTop: '16px', background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', zIndex: 60, maxHeight: '300px', overflowY: 'auto', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}>
+                      <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: 700, color: '#94a3b8', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>{displayArr.length < 2 ? '熱門目的地' : '搜尋建議'}</div>
+                      {(displayArr.length < 2 ? popularAirports : arrSuggestionsList).map((s: any, i: number) => {
+                        const sId = s.id || s.code;
+                        const sName = s.name || s.city;
+                        return (
+                          <div 
+                            key={sId || i} 
+                            style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center', cursor: 'pointer', borderBottom: '1px solid #f1f5f9' }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#f0f7ff'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            onClick={() => {
+                              setSearchParams({ ...searchParams, arrival_id: sId });
+                              setDisplayArr(sName);
+                              setShowArrSuggestions(false);
+                            }}
+                          >
+                            <div style={{ color: '#64748b' }}>
+                              {s.type === 'airport' ? <Plane size={16} /> : s.type === 'country' ? <Globe size={16} /> : <MapPin size={16} />}
+                            </div>
+                            <div>
+                              <div style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                {sName}
+                                {s.code && <span style={{ background: '#f1f5f9', color: '#64748b', fontSize: '11px', padding: '2px 6px', borderRadius: '4px' }}>{s.code}</span>}
+                              </div>
+                              <div style={{ fontSize: '12px', color: '#64748b' }}>{s.description || s.city || ''}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="hotel-field-divider" />
+
+              {/* Outbound Date */}
+              <div className="hotel-field" style={{ flex: '1 1 140px' }}>
+                <div className="hotel-field-icon"><Calendar size={18} /></div>
+                <div className="hotel-field-content">
+                  <span className="hotel-field-label">出發日期</span>
+                  <input 
+                    type="date" 
+                    className="hotel-field-input"
+                    value={searchParams.outbound_date}
+                    min={new Date().toISOString().split('T')[0]}
+                    onChange={e => setSearchParams({...searchParams, outbound_date: e.target.value})}
+                    required 
+                  />
+                </div>
+              </div>
+
+              <div className="hotel-field-divider" />
+
+              {/* Return Date */}
+              <div className={`hotel-field ${tripType === 'one-way' ? 'opacity-50' : ''}`} style={{ flex: '1 1 140px', pointerEvents: tripType === 'one-way' ? 'none' : 'auto' }}>
+                <div className="hotel-field-icon"><Calendar size={18} /></div>
+                <div className="hotel-field-content">
+                  <span className="hotel-field-label">回程日期</span>
+                  <input 
+                    type="date" 
+                    className="hotel-field-input"
+                    value={searchParams.return_date}
+                    min={searchParams.outbound_date}
+                    onChange={e => setSearchParams({...searchParams, return_date: e.target.value})}
+                    disabled={tripType === 'one-way'}
+                    required={tripType === 'round-trip'}
+                  />
+                </div>
+              </div>
+
+              <div className="hotel-field-divider" style={{ display: 'none' }} />
+
+              <div style={{ flex: '1 1 140px', padding: '8px', display: 'flex' }}>
+                <button type="submit" className="hotel-search-btn" style={{ margin: 0 }} disabled={loading}>
+                  {loading ? (
+                    <><Loader2 size={18} className="animate-spin" /> 搜尋中</>
+                  ) : (
+                    <><Search size={18} /> 搜尋航班</>
+                  )}
+                </button>
+              </div>
+
+            </div>
+          </form>
         </div>
-
-        {/* Input Form Fields */}
-        <form onSubmit={handleSearch} className="search-form">
-          {/* Departure Input & suggestions */}
-          <div className="input-group" ref={depRef}>
-            <div className="input-with-icon">
-              <MapPin className="icon" size={18} />
-              <input 
-                type="text" 
-                placeholder="出發地 (中英文或代碼)" 
-                title="出發機場名稱或代碼"
-                value={searchParams.departure_id}
-                onFocus={() => setShowDepSuggestions(true)}
-                onChange={e => setSearchParams({...searchParams, departure_id: e.target.value})}
-                required 
-              />
-            </div>
-            {showDepSuggestions && (
-              <div className="suggestions-panel shadow-lg">
-                <div className="section-hdr">熱門出發地</div>
-                {popularAirports.map(airport => (
-                  <div 
-                    key={airport.code} 
-                    className="suggestion-item"
-                    onClick={() => {
-                      setSearchParams({ ...searchParams, departure_id: airport.code });
-                      setShowDepSuggestions(false);
-                    }}
-                  >
-                    <span className="city-info">{airport.city}</span>
-                    <span className="airport-code">{airport.code}</span>
-                    <span className="airport-name-desc">{airport.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Swap Button */}
-          <div className="swap-btn-container">
-            <button type="button" onClick={swapAirports} className="btn-swap-airports" title="交換機場">
-              <RefreshCw size={16} />
-            </button>
-          </div>
-
-          {/* Arrival Input & suggestions */}
-          <div className="input-group" ref={arrRef}>
-            <div className="input-with-icon">
-              <MapPin className="icon" size={18} />
-              <input 
-                type="text" 
-                placeholder="目的地 (中英文或代碼)" 
-                title="抵達機場名稱或代碼"
-                value={searchParams.arrival_id}
-                onFocus={() => setShowArrSuggestions(true)}
-                onChange={e => setSearchParams({...searchParams, arrival_id: e.target.value})}
-                required 
-              />
-            </div>
-            {showArrSuggestions && (
-              <div className="suggestions-panel shadow-lg">
-                <div className="section-hdr">熱門目的地</div>
-                {popularAirports.map(airport => (
-                  <div 
-                    key={airport.code} 
-                    className="suggestion-item"
-                    onClick={() => {
-                      setSearchParams({ ...searchParams, arrival_id: airport.code });
-                      setShowArrSuggestions(false);
-                    }}
-                  >
-                    <span className="city-info">{airport.city}</span>
-                    <span className="airport-code">{airport.code}</span>
-                    <span className="airport-name-desc">{airport.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Outbound Date */}
-          <div className="input-group">
-            <div className="input-with-icon">
-              <Calendar className="icon" size={18} />
-              <input 
-                type="date" 
-                title="出發日期"
-                value={searchParams.outbound_date}
-                min={new Date().toISOString().split('T')[0]}
-                onChange={e => setSearchParams({...searchParams, outbound_date: e.target.value})}
-                required 
-              />
-            </div>
-          </div>
-
-          {/* Return Date (only visible/enabled for round-trip) */}
-          <div className={`input-group ${tripType === 'one-way' ? 'disabled-input-group' : ''}`}>
-            <div className="input-with-icon">
-              <Calendar className="icon" size={18} />
-              <input 
-                type="date" 
-                title="回程日期"
-                value={searchParams.return_date}
-                min={searchParams.outbound_date}
-                onChange={e => setSearchParams({...searchParams, return_date: e.target.value})}
-                disabled={tripType === 'one-way'}
-                required={tripType === 'round-trip'}
-              />
-            </div>
-          </div>
-
-          {/* Search Button */}
-          <button type="submit" className="btn-primary btn-search shadow-md" disabled={loading}>
-            {loading ? <Loader2 className="animate-spin" size={20} /> : <Search size={20} />}
-            <span>搜尋航班</span>
-          </button>
-        </form>
       </div>
 
       {/* Results and Itinerary Overview */}
