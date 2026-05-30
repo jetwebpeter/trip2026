@@ -544,7 +544,7 @@ body {
 .hotel-hero-section {
   position: relative;
   border-radius: 24px;
-  overflow: hidden;
+  overflow: visible; /* Changed to visible to stop clipping dropdowns */
   margin-bottom: 32px;
   min-height: 300px;
   display: flex;
@@ -556,6 +556,8 @@ body {
 .hotel-hero-bg {
   position: absolute;
   inset: 0;
+  border-radius: 24px;
+  overflow: hidden;
   background:
     linear-gradient(135deg, #0a2540 0%, #0d3b66 30%, #1a5fa5 60%, #3b82c4 85%, #6bb0e0 100%);
   z-index: 0;
