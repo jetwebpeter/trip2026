@@ -455,11 +455,11 @@ const FlightSearch: React.FC = () => {
                     <div className="suggestions-panel shadow-lg" style={{ position: 'absolute', top: '100%', left: '-46px', width: '380px', marginTop: '16px', background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', zIndex: 60, maxHeight: '300px', overflowY: 'auto', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}>
                       <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: 700, color: '#94a3b8', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>{displayDep.length < 2 ? '熱門出發地' : '搜尋建議'}</div>
                       {(displayDep.length < 2 ? popularAirports : depSuggestionsList).map((s: any, i: number) => {
-                        const sId = s.id || s.code;
-                        const sName = s.name || s.city;
+                        const sId = s.id || s.code || '';
+                        const sName = s.name || s.city || '';
                         return (
                           <div 
-                            key={sId || i} 
+                            key={`${sId}-${i}`} 
                             style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center', cursor: 'pointer', borderBottom: '1px solid #f1f5f9' }}
                             onMouseEnter={e => e.currentTarget.style.background = '#f0f7ff'}
                             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
@@ -516,11 +516,11 @@ const FlightSearch: React.FC = () => {
                     <div className="suggestions-panel shadow-lg" style={{ position: 'absolute', top: '100%', left: '-46px', width: '380px', marginTop: '16px', background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', zIndex: 60, maxHeight: '300px', overflowY: 'auto', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}>
                       <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: 700, color: '#94a3b8', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>{displayArr.length < 2 ? '熱門目的地' : '搜尋建議'}</div>
                       {(displayArr.length < 2 ? popularAirports : arrSuggestionsList).map((s: any, i: number) => {
-                        const sId = s.id || s.code;
-                        const sName = s.name || s.city;
+                        const sId = s.id || s.code || '';
+                        const sName = s.name || s.city || '';
                         return (
                           <div 
-                            key={sId || i} 
+                            key={`${sId}-${i}`} 
                             style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center', cursor: 'pointer', borderBottom: '1px solid #f1f5f9' }}
                             onMouseEnter={e => e.currentTarget.style.background = '#f0f7ff'}
                             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
