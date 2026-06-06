@@ -683,7 +683,7 @@ app.get('*', (req, res) => {
 // ================================================================
 // START
 // ================================================================
-const PORT = 3002;
+const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
   const vCnt = db ? db.prepare('SELECT COUNT(*) as c FROM land_services').get().c : 0;
   const tCnt = db ? db.prepare('SELECT COUNT(*) as c FROM tour_products').get().c : 0;
