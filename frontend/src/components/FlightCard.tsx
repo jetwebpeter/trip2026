@@ -253,65 +253,67 @@ const FlightCard: React.FC<{
 
       {/* Expanded Accordion Panel: 航班詳情 details timeline */}
       {isExpanded && (
-        <div className="flight-expanded-details-timeline p-6 border-t border-gray-100 bg-gray-50/30 animate-fade-in rounded-b-2xl">
-          <h4 className="font-bold text-gray-700 text-sm mb-4 border-b border-gray-100 pb-2">航段詳細資訊 (Flight Details Timeline)</h4>
+        <div className="flight-expanded-details-timeline">
+          <h4 className="timeline-title">航段詳細資訊 (Flight Details Timeline)</h4>
           
-          <div className="vertical-timeline pl-4 relative border-l-2 border-blue-100 ml-2 space-y-8">
+          <div className="vertical-timeline">
             {segments.map((seg, idx) => {
               const showLayover = idx < stopCount;
               return (
-                <div key={idx} className="timeline-segment-card relative">
+                <div key={idx} className="timeline-segment-card">
                   {/* Timeline point indicator */}
-                  <div className="absolute -left-[25px] top-1 bg-blue-700 w-4 h-4 rounded-full border-4 border-white shadow-sm flex items-center justify-center"></div>
+                  <div className="timeline-dot"></div>
 
-                  <div className="segment-card bg-white p-4 rounded-xl border border-gray-150 shadow-sm ml-2">
+                  <div className="segment-card">
                     {/* Header: Date and Airport code */}
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
+                    <div className="segment-header">
+                      <span className="segment-badge">
                         航段 {idx + 1} · {formatDate(seg.departure_airport.time)}
                       </span>
-                      <span className="text-xs font-extrabold text-blue-700">
+                      <span className="segment-route">
                         {seg.departure_airport.id} ✈ {seg.arrival_airport.id}
                       </span>
                     </div>
 
                     {/* Timeline row info */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                      <div>
-                        <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">出發時間與航站</div>
-                        <div className="text-base font-bold text-gray-800 mt-0.5">
+                    <div className="segment-grid">
+                      <div className="segment-column left">
+                        <div className="segment-label">出發時間與航站</div>
+                        <div className="segment-time">
                           {formatTime(seg.departure_airport.time)}
-                          <span className="text-xs font-normal text-gray-500 ml-2">({getTerminal(seg.departure_airport.id, seg.flight_number)})</span>
+                          <span className="segment-terminal-tag">{getTerminal(seg.departure_airport.id, seg.flight_number)}</span>
                         </div>
-                        <div className="text-xs text-gray-500 font-medium">{seg.departure_airport.name}</div>
+                        <div className="segment-airport-name">{seg.departure_airport.name}</div>
                       </div>
                       
-                      <div className="flex flex-col items-center text-center justify-center border-t border-b border-dashed border-gray-100 py-2 md:border-none md:py-0">
-                        <Plane size={14} className="text-gray-400 mb-0.5" />
-                        <span className="text-xs font-bold text-gray-600">{seg.airline} {seg.flight_number}</span>
-                        <span className="text-[10px] text-gray-400 mt-0.5">{formatDuration(seg.duration)}</span>
+                      <div className="segment-column center">
+                        <div className="segment-flight-info">
+                          <Plane size={13} />
+                          <span>{seg.airline} {seg.flight_number}</span>
+                        </div>
+                        <span className="segment-duration-text">飛行時間 {formatDuration(seg.duration)}</span>
                       </div>
 
-                      <div className="text-right">
-                        <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">抵達時間與航站</div>
-                        <div className="text-base font-bold text-gray-800 mt-0.5">
+                      <div className="segment-column right">
+                        <div className="segment-label">抵達時間與航站</div>
+                        <div className="segment-time">
                           {formatTime(seg.arrival_airport.time)}
-                          <span className="text-xs font-normal text-gray-500 ml-2">({getTerminal(seg.arrival_airport.id, seg.flight_number)})</span>
+                          <span className="segment-terminal-tag">{getTerminal(seg.arrival_airport.id, seg.flight_number)}</span>
                         </div>
-                        <div className="text-xs text-gray-500 font-medium">{seg.arrival_airport.name}</div>
+                        <div className="segment-airport-name">{seg.arrival_airport.name}</div>
                       </div>
                     </div>
 
                     {/* Flight Specs & Extras */}
-                    <div className="segment-specs-row flex flex-wrap gap-4 mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500">
-                      <span className="font-semibold bg-blue-50/50 text-blue-800 px-2 py-1 rounded">{seg.airplane}</span>
-                      <span className="font-semibold bg-gray-50 text-gray-600 px-2 py-1 rounded">艙等: {seg.travel_class === 'Economy' ? '經濟艙' : seg.travel_class}</span>
-                      {seg.legroom && <span className="font-semibold bg-gray-50 text-gray-600 px-2 py-1 rounded">椅距: {seg.legroom}</span>}
+                    <div className="segment-specs-row">
+                      <span className="spec-pill airplane">{seg.airplane}</span>
+                      <span className="spec-pill class">艙等: {seg.travel_class === 'Economy' ? '經濟艙' : seg.travel_class}</span>
+                      {seg.legroom && <span className="spec-pill">椅距: {seg.legroom}</span>}
                     </div>
 
                     {/* Segments extensions listed as amenities */}
                     {seg.extensions && seg.extensions.length > 0 && (
-                      <div className="amenities-tags-grid flex flex-wrap gap-1.5 mt-2.5">
+                      <div className="amenities-tags-grid">
                         {seg.extensions.map((ext, extIdx) => {
                           let extIcon = <Info size={10} />;
                           if (ext.toLowerCase().includes('wi-fi') || ext.toLowerCase().includes('wifi')) extIcon = <Wifi size={10} />;
@@ -319,7 +321,7 @@ const FlightCard: React.FC<{
                           if (ext.toLowerCase().includes('video') || ext.toLowerCase().includes('screen') || ext.toLowerCase().includes('on-demand')) extIcon = <Tv size={10} />;
                           
                           return (
-                            <span key={extIdx} className="amenity-tag bg-gray-100/70 hover:bg-gray-100 text-gray-600 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 border border-gray-200/50">
+                            <span key={extIdx} className="amenity-tag">
                               {extIcon} {ext}
                             </span>
                           );
@@ -338,13 +340,13 @@ const FlightCard: React.FC<{
 
                   {/* Layover block between segments */}
                   {showLayover && (
-                    <div className="layover-block ml-8 my-4 relative animate-fade-in">
-                      <div className="absolute -left-[35px] top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-orange-100 border border-orange-300 flex items-center justify-center">
+                    <div className="layover-block">
+                      <div className="layover-dot">
                         <Clock size={10} className="text-orange-600" />
                       </div>
-                      <div className="layover-content inline-flex items-center gap-2 bg-orange-50 border border-orange-100 rounded-full px-4 py-1.5 text-xs text-orange-800 font-bold shadow-sm">
+                      <div className="layover-content">
                         <span>轉機於 {seg.arrival_airport.name} ({seg.arrival_airport.id})</span>
-                        <span className="text-orange-400">·</span>
+                        <span className="text-orange-300">·</span>
                         <span>等待時間 {calculateLayover(seg.arrival_airport.time, segments[idx + 1].departure_airport.time)}</span>
                       </div>
                     </div>
