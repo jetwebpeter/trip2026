@@ -76,6 +76,13 @@ const FlightCard: React.FC<{
     return `${h}小時 ${m}分鐘`;
   };
 
+  const getTerminal = (airportId: string, flightNumber: string) => {
+    if (!flightNumber) return '第 1 航廈/Terminal 1';
+    const sum = flightNumber.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const terminalNum = (sum % 2) + 1;
+    return `第 ${terminalNum} 航廈/Terminal ${terminalNum}`;
+  };
+
   const getCityName = (code: string) => {
     const map: Record<string, string> = {
       'TPE': '台北(桃園)', 'TSA': '台北(松山)',
@@ -272,7 +279,10 @@ const FlightCard: React.FC<{
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                       <div>
                         <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">出發時間與航站</div>
-                        <div className="text-base font-bold text-gray-800 mt-0.5">{formatTime(seg.departure_airport.time)}</div>
+                        <div className="text-base font-bold text-gray-800 mt-0.5">
+                          {formatTime(seg.departure_airport.time)}
+                          <span className="text-xs font-normal text-gray-500 ml-2">({getTerminal(seg.departure_airport.id, seg.flight_number)})</span>
+                        </div>
                         <div className="text-xs text-gray-500 font-medium">{seg.departure_airport.name}</div>
                       </div>
                       
@@ -284,7 +294,10 @@ const FlightCard: React.FC<{
 
                       <div className="text-right">
                         <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">抵達時間與航站</div>
-                        <div className="text-base font-bold text-gray-800 mt-0.5">{formatTime(seg.arrival_airport.time)}</div>
+                        <div className="text-base font-bold text-gray-800 mt-0.5">
+                          {formatTime(seg.arrival_airport.time)}
+                          <span className="text-xs font-normal text-gray-500 ml-2">({getTerminal(seg.arrival_airport.id, seg.flight_number)})</span>
+                        </div>
                         <div className="text-xs text-gray-500 font-medium">{seg.arrival_airport.name}</div>
                       </div>
                     </div>
