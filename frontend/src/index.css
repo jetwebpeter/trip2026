@@ -1,13 +1,13 @@
 :root {
-  --primary: #E53935;
-  --primary-dark: #B71C1C;
-  --primary-light: #FFEBEE;
-  --accent: #FF5252;
-  --success-bg: #E1F5EE;
-  --success-text: #085041;
+  --primary: #2E7D32;
+  --primary-dark: #1B5E20;
+  --primary-light: #E8F5E9;
+  --accent: #4CAF50;
+  --success-bg: #E8F5E9;
+  --success-text: #1B5E20;
   --border: #e5e7eb;
   --text-muted: #6b7280;
-  --bg: #f8fafc;
+  --bg: #F1F8F5;
   --surface: #ffffff;
 }
 
@@ -178,7 +178,7 @@ body {
 }
 .tour-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(24, 95, 165, 0.12);
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.12);
   border-color: var(--primary);
 }
 .tour-badge {
@@ -559,7 +559,7 @@ body {
   border-radius: 24px;
   overflow: hidden;
   background:
-    linear-gradient(135deg, #0a2540 0%, #0d3b66 30%, #1a5fa5 60%, #3b82c4 85%, #6bb0e0 100%);
+    linear-gradient(135deg, #0F3D1C 0%, #1B5E20 30%, #2E7D32 60%, #4CAF50 85%, #A5D6A7 100%);
   z-index: 0;
 }
 .hotel-hero-bg::before {
@@ -567,8 +567,8 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 20% 60%, rgba(100, 200, 255, 0.12), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255, 200, 100, 0.06), transparent);
+    radial-gradient(ellipse 80% 50% at 20% 60%, rgba(165, 214, 167, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255, 235, 59, 0.08), transparent);
   z-index: 1;
 }
 .hotel-hero-bg::after {
@@ -578,7 +578,7 @@ body {
   left: 0;
   right: 0;
   height: 120px;
-  background: linear-gradient(to top, rgba(10, 37, 64, 0.7), transparent);
+  background: linear-gradient(to top, rgba(15, 61, 28, 0.75), transparent);
   z-index: 1;
 }
 
@@ -731,7 +731,7 @@ body {
   width: 100%;
   margin-top: 6px;
   padding: 14px 24px;
-  background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, #4CAF50 100%);
   color: #fff;
   border: none;
   border-radius: 14px;
@@ -739,17 +739,17 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.3);
   letter-spacing: 0.3px;
 }
 .hotel-search-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
   filter: brightness(1.06);
 }
 .hotel-search-btn:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
 }
 .hotel-search-btn:disabled {
   opacity: 0.7;
@@ -2241,7 +2241,7 @@ body {
   border-radius: 8px;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(4,44,83,0.94), rgba(24,95,165,0.56)),
+    linear-gradient(90deg, rgba(15,61,28,0.94), rgba(76,175,80,0.56)),
     url("https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=1400&auto=format&fit=crop") center/cover;
   color: #fff;
 }
@@ -2326,7 +2326,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 36%, rgba(4,44,83,0.72));
+  background: linear-gradient(180deg, transparent 36%, rgba(15,61,28,0.72));
 }
 .cruise-media span {
   position: absolute;
@@ -2457,7 +2457,7 @@ body {
   background: var(--primary-light);
   color: var(--primary);
   margin-bottom: 16px;
-  box-shadow: 0 4px 14px rgba(24, 95, 165, 0.15);
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.15);
 }
 .hero-plane-icon {
   animation: plane-fly 4s ease-in-out infinite;
@@ -2939,7 +2939,7 @@ body {
 }
 .btn-checkout:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(24, 95, 165, 0.25);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.25);
 }
 
 /* Quick destination pill styling */
