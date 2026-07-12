@@ -7,7 +7,7 @@ services:
     buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install --legacy-peer-deps && npm rebuild better-sqlite3
     startCommand: cd backend && node server.js
     domains:
-      - trip2026.aicrm.tw
+      - travelpro26200.aicrm.tw
     envVars:
       - key: NODE_VERSION
         value: 20
@@ -17,4 +17,4 @@ services:
 
 
 
-        
+
