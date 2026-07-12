@@ -148,6 +148,29 @@ app.get(['/api/flights/search', '/api/flights'], async (req, res) => {
   } catch (err) { res.status(502).json({ error: err.message }); }
 });
 
+// ================================================================
+// DESTINATIONS API
+// ================================================================
+app.get('/api/destinations', async (req, res) => {
+  const { q = '', departure_id = 'TPE', gl = 'tw', hl = 'zh-tw' } = req.query;
+  const params = new URLSearchParams({
+    engine: 'google_travel_explore',
+    api_key: SERPAPI_KEY,
+    departure_id,
+    gl,
+    hl
+  });
+  if (q) params.set('q', q);
+  try {
+    const resp = await nodeFetch('https://serpapi.com/search.json?' + params);
+    const data = await resp.json();
+    if (data.error) return res.status(502).json({ error: data.error });
+    res.json({ destinations: data.destinations || [] });
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
+});
+
 const localTranslations = {
   '/m/01nfpd': { zh: '臺灣桃園國際機場', en: 'Taiwan Taoyuan International Airport', code: 'TPE' },
   '/m/06t82': { zh: '新加坡樟宜機場', en: 'Singapore Changi Airport', code: 'SIN' },
