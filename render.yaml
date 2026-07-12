@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: GreenTripPRO
+    name: TripPROV2
     runtime: node
     region: singapore
     plan: free
