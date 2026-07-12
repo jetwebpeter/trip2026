@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 // ===== API Base URL (hotel-server on port 3002) =====
-const API = '';
+const API = import.meta.env.VITE_API_URL || '';
 
 // ===== Types =====
 interface HotelProperty {

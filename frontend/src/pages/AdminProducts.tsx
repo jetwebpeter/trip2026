@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API = '';
+const API = import.meta.env.VITE_API_URL || '';
 
 // ===== TYPES =====
 interface Tour {

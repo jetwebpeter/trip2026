@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API = '';
+const API = import.meta.env.VITE_API_URL || '';
 
 interface Message {
   role: 'user' | 'bot';

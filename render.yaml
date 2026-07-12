@@ -1,13 +1,13 @@
 services:
   - type: web
-    name: TripPROV2
+    name: GreenTripPRO
     runtime: node
     region: singapore
     plan: free
     buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install --legacy-peer-deps && npm rebuild better-sqlite3
     startCommand: cd backend && node server.js
     domains:
-      - travelpro26200.aicrm.tw
+      - travelpro26300.aicrm.tw
     envVars:
       - key: NODE_VERSION
         value: 20
